@@ -117,8 +117,17 @@
         dx (+ (* left -1.0) (* right 1.0))
         ;; Y decreases as you go up.  Y=0 at top
         dy (+ (* up -1.0) (* down 1.0))
-        tri-x (+ tri-x dx)
-        tri-y (+ tri-y dy)]
+
+        
+        ;; It's meant not to move the triangle out of the window 
+        tri-x (let [plan-x (+ tri-x dx) max-x (:width @globals)] (cond
+                                                                  (> 0 plan-x) 0
+                                                                  (< max-x  plan-x) max-x
+                                                                  :else plan-x))
+        tri-y (let [plan-y (+ tri-y dy) max-y (:height @globals)] (cond
+                                                                   (> 0  plan-y) 0 
+                                                                   (< max-y plan-y) max-y 
+                                                                   :else plan-y))]
     (swap! globals assoc :tri-x tri-x :tri-y tri-y)))
 
 (defn mouse
